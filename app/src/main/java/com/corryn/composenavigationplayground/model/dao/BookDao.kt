@@ -11,12 +11,12 @@ import com.corryn.composenavigationplayground.model.entity.BookEntity
 interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg books: BookEntity)
+    suspend fun insertAll(books: List<BookEntity>)
 
     @Delete
-    fun delete(book: BookEntity)
+    suspend fun delete(book: BookEntity)
 
     @Query("SELECT * FROM books")
-    fun getAll(): List<BookEntity>
+    suspend fun getAll(): List<BookEntity>
 
 }
