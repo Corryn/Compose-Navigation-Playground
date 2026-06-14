@@ -53,22 +53,21 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ComposeNavigationPlaygroundApp() {
+    var userName by rememberSaveable { mutableStateOf("Android") }
+
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = AppDestination.Home
+        startDestination = AppDestination.Home(name = userName)
     ) {
         composable<AppDestination.Home> {
-            Column {
-                Text(text = "Home")
-            }
+            val route = it.toRoute<AppDestination.Home>()
+            HomeScreen(route.name)
         }
         composable<AppDestination.Details> {
-            val id = it.toRoute<AppDestination.Details>()
-            Column {
-                Text(text = "Details $id")
-            }
+            val route = it.toRoute<AppDestination.Details>()
+            DetailsScreen(id = route.id)
         }
     }
 }
@@ -76,11 +75,11 @@ fun ComposeNavigationPlaygroundApp() {
 @PreviewScreenSizes
 @Composable
 fun Navigation3SuiteScaffoldPlaygroundApp() {
-    val appBackstack = rememberSaveable {
-        mutableStateListOf<AppDestination>(AppDestination.Home)
-    }
-
     var userName by rememberSaveable { mutableStateOf("Android") }
+
+    val appBackstack = rememberSaveable {
+        mutableStateListOf<AppDestination>(AppDestination.Home(name = userName))
+    }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -110,9 +109,7 @@ fun Navigation3SuiteScaffoldPlaygroundApp() {
                 entryProvider = { key ->
                     when (key) {
                         is AppDestination.Home -> NavEntry(key) {
-                            HomeScreen(
-                                name = userName
-                            )
+                            HomeScreen(name = key.name)
                         }
 
                         is AppDestination.Favorites -> NavEntry(key) {
@@ -135,7 +132,10 @@ fun Navigation3SuiteScaffoldPlaygroundApp() {
 }
 
 @Composable
-fun HomeScreen(name: String, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    name: String,
+    modifier: Modifier = Modifier
+) {
     Scaffold(modifier = modifier.fillMaxSize()) { padding ->
         Text(
             text = "Hello $name!",

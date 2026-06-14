@@ -16,7 +16,9 @@ enum class RootDestinations(
 sealed interface AppDestination {
 
     @Serializable
-    data object Home: AppDestination
+    data class Home(
+        val name: String
+    ): AppDestination
 
     @Serializable
     data object Favorites: AppDestination
