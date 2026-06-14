@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -20,6 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.corryn.composenavigationplayground.ui.theme.ComposeNavigationPlaygroundTheme
@@ -31,8 +35,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val useNavigation3 = rememberSaveable {
+                true
+            }
+
             ComposeNavigationPlaygroundTheme {
-                ComposeNavigationPlaygroundApp()
+                if (useNavigation3) {
+                    Navigation3PlaygroundApp()
+                } else {
+                    ComposeNavigationPlaygroundApp()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ComposeNavigationPlaygroundApp() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = AppDestination.Home
+    ) {
+        composable<AppDestination.Home> {
+            Column {
+                Text(text = "Home")
             }
         }
     }
@@ -40,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
 @PreviewScreenSizes
 @Composable
-fun ComposeNavigationPlaygroundApp() {
+fun Navigation3PlaygroundApp() {
     val appBackstack = rememberSaveable {
         mutableStateListOf<AppDestination>(AppDestination.Home)
     }

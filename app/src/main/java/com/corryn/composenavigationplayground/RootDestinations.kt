@@ -1,5 +1,6 @@
 package com.corryn.composenavigationplayground
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 enum class RootDestinations(
