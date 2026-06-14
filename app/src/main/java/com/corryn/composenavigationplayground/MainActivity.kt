@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.corryn.composenavigationplayground.ui.theme.ComposeNavigationPlaygroundTheme
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
             ComposeNavigationPlaygroundTheme {
                 if (useNavigation3) {
-                    Navigation3PlaygroundApp()
+                    Navigation3SuiteScaffoldPlaygroundApp()
                 } else {
                     ComposeNavigationPlaygroundApp()
                 }
@@ -63,12 +64,18 @@ fun ComposeNavigationPlaygroundApp() {
                 Text(text = "Home")
             }
         }
+        composable<AppDestination.Details> {
+            val id = it.toRoute<AppDestination.Details>()
+            Column {
+                Text(text = "Details $id")
+            }
+        }
     }
 }
 
 @PreviewScreenSizes
 @Composable
-fun Navigation3PlaygroundApp() {
+fun Navigation3SuiteScaffoldPlaygroundApp() {
     val appBackstack = rememberSaveable {
         mutableStateListOf<AppDestination>(AppDestination.Home)
     }
@@ -97,41 +104,46 @@ fun Navigation3PlaygroundApp() {
             }
         }
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            val baseModifier = Modifier.padding(innerPadding)
-
-            NavDisplay(
+        NavDisplay(
                 backStack = appBackstack,
-                onBack = { appBackstack.removeLastOrNull()},
+                onBack = { appBackstack.removeLastOrNull() },
                 entryProvider = { key ->
                     when (key) {
                         is AppDestination.Home -> NavEntry(key) {
                             HomeScreen(
-                                name = userName,
-                                modifier = baseModifier
+                                name = userName
                             )
                         }
 
                         is AppDestination.Favorites -> NavEntry(key) {
-                            FavoritesScreen(modifier = baseModifier)
+                            FavoritesScreen()
                         }
 
                         is AppDestination.Profile -> NavEntry(key) {
-                            ProfileScreen(modifier = baseModifier)
+                            ProfileScreen()
                         }
+
+                        is AppDestination.Details -> NavEntry(key) {
+                            DetailsScreen(id = key.id)
+                        }
+
+                        else -> throw RuntimeException("Unsupported AppDestination: $key")
                     }
                 }
             )
-        }
     }
 }
 
 @Composable
 fun HomeScreen(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier.fillMaxSize()
-    )
+    Scaffold(modifier = modifier.fillMaxSize()) { padding ->
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding)
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -144,10 +156,14 @@ fun HomeScreenPreview() {
 
 @Composable
 fun FavoritesScreen(modifier: Modifier = Modifier) {
-    Text(
-        text = "Favorites",
-        modifier = modifier.fillMaxSize()
-    )
+    Scaffold(modifier = modifier.fillMaxSize()) { padding ->
+        Text(
+            text = "Favorites",
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding)
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -158,14 +174,40 @@ fun FavoritesScreenPreview() {
 
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
-    Text(
-        text = "Profile",
-        modifier = modifier.fillMaxSize()
-    )
+    Scaffold(modifier = modifier.fillMaxSize()) { padding ->
+        Text(
+            text = "Profile",
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding)
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
     ProfileScreen()
+}
+
+@Composable
+fun DetailsScreen(
+    id: String,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(modifier = modifier.fillMaxSize()) { padding ->
+        Text(
+            text = "Details for $id",
+            modifier = modifier
+                .fillMaxSize()
+                .padding(padding)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsScreenPreview() {
+    DetailsScreen(id = "11111")
 }

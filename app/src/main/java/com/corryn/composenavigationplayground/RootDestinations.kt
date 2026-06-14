@@ -24,4 +24,9 @@ sealed interface AppDestination {
     @Serializable
     data object Profile: AppDestination
 
+    @Serializable
+    data class Details(
+        val id: String
+    ): AppDestination
+
 }
