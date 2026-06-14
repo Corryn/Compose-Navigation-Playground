@@ -8,7 +8,7 @@ enum class RootDestinations(
     val icon: Int,
     val destination: AppDestination
 ) {
-    HOME("Home", R.drawable.ic_home, AppDestination.Home),
+    HOME("Home", R.drawable.ic_home, AppDestination.Home("")),
     FAVORITES("Favorites", R.drawable.ic_favorite, AppDestination.Favorites),
     PROFILE("Profile", R.drawable.ic_account_box, AppDestination.Profile),
 }
