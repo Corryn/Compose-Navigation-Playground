@@ -123,8 +123,6 @@ fun Navigation3SuiteScaffoldPlaygroundApp() {
                         is AppDestination.Details -> NavEntry(key) {
                             DetailsScreen(id = key.id)
                         }
-
-                        else -> throw RuntimeException("Unsupported AppDestination: $key")
                     }
                 }
             )
